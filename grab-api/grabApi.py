@@ -53,13 +53,13 @@ class Driver(Resource):
         data_parser.add_argument('loc', required=True)
         data_parser.add_argument('des', required=True)
         data_parser.add_argument('guest_count', required=True)
-        args_parse = data_parser.parse_args()  # declaring the arguments parsing
+        argsParser = data_parser.parse_args()  # declaring the arguments parsing
         # splitting the data for location and destination
-        current_loc_X, current_loc_Y = args_parse['loc'].split(',')
-        to_X, to_Y = args_parse['des'].split(',')
+        current_loc_X, current_loc_Y = argsParser['loc'].split(',')
+        to_X, to_Y = argsParser['des'].split(',')
 
         user_request = {
-            'user_name': args_parse['name'],
+            'user_name': argsParser['name'],
             'req_loc': {
                 'x': int(current_loc_X),
                 'y': int(current_loc_Y)
@@ -68,7 +68,7 @@ class Driver(Resource):
                 'x': int(to_X),
                 'y': int(to_Y)
             },
-            'guestCount': int(args_parse['guest_count'])
+            'guestCount': int(argsParser['guest_count'])
         }
         willDriveDistance = distance_cal([user_request['req_loc']['x'], user_request['req_loc']['y']],
                                          [user_request['destination']['x'], user_request['destination']['y']])
@@ -77,7 +77,7 @@ class Driver(Resource):
         return jsonify({
             'driverFound': driverAssigned,
             'totalDistanceTravel': willDriveDistance,
-            'totalGuest': carCapacity,
+            'totalGuest': carCapacity
         })
 
 
@@ -105,7 +105,7 @@ def findSuitableDriver(driverList, userData):
 
 
 def distance_cal(from_loc, to_loc):
-    return abs(to_loc['x']-from_loc['x']) + abs(to_loc['y']-from_loc['y'])
+    return abs(to_loc[0]-from_loc[0]) + abs(to_loc[1]-from_loc[1])
 
 
 api.add_resource(Driver, '/api/search/drivers')
